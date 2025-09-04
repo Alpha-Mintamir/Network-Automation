@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Automation Tool - Professional Edition</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌐</text></svg>">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-logo">🌐</span>
+                <span class="nav-title">Network Automation Tool</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-section="home">
+                        <span class="nav-icon">🏠</span> Home
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">⚙️</span> Configuration <span class="dropdown-arrow">▼</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-link" data-section="interface-config">Interface IP Configuration</a></li>
+                        <li><a href="#" class="dropdown-link" data-section="subinterface-config">Sub-interface Configuration</a></li>
+                        <li><a href="#" class="dropdown-link" data-section="vlan-config">VLAN Configuration</a></li>
+                        <li><a href="#" class="dropdown-link" data-section="routing-config">Routing Configuration</a></li>
+                        <li><a href="#" class="dropdown-link" data-section="acl-config">Access Control Lists</a></li>
+                        <li><a href="#" class="dropdown-link" data-section="dhcp-config">DHCP Configuration</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">📊</span> Show Commands <span class="dropdown-arrow">▼</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="dropdown-link" data-section="show-ip-brief">Show IP Brief</a></li>
+                        <li><a href="#" class="dropdown-link" data-section="show-interfaces">Show Interfaces</a></li>
+                        <li><a href="#" class="dropdown-link" data-section="show-routes">Show Routes</a></li>
+                        <li><a href="#" class="dropdown-link" data-section="show-vlan">Show VLAN</a></li>
+                        <li><a href="#" class="dropdown-link" data-section="show-running">Show Running Config</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="diagnostics">
+                        <span class="nav-icon">🔍</span> Diagnostics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="custom">
+                        <span class="nav-icon">📝</span> Custom Commands
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="history">
+                        <span class="nav-icon">📜</span> History
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-status" id="connectionStatus">
+                <span class="status-dot"></span>
+                <span class="status-text">Disconnected</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Sidebar with Device Connection -->
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <h3>Device Connection</h3>
+                <form id="deviceForm">
+                    <div class="form-group">
+                        <label for="host">Device IP</label>
+                        <input type="text" id="host" name="host" value="192.168.122.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" value="admin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" value="cisco123" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="secret">Enable Password</label>
+                        <input type="password" id="secret" name="secret" placeholder="Optional">
+                        <small class="help-text">Leave empty if same as password</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="port">SSH Port</label>
+                        <input type="number" id="port" name="port" value="22" required>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-block" onclick="testConnection()">
+                        Connect to Device
+                    </button>
+                </form>
+            </div>
+            
+            <div class="sidebar-card">
+                <h3>Quick Actions</h3>
+                <button class="btn btn-secondary btn-block" onclick="saveRunningConfig()">
+                    💾 Save Config
+                </button>
+                <button class="btn btn-secondary btn-block" onclick="showTechSupport()">
+                    📋 Show Tech Support
+                </button>
+            </div>
+            
+            <div class="sidebar-card">
+                <h3>AI Settings</h3>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="enableAI" checked onchange="toggleAIInterpretation()">
+                    Enable AI Interpretation
+                </label>
+                <p class="help-text">Uses AI to analyze show command outputs</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content">
+            <!-- Home Section -->
+            <section id="home" class="content-section active">
+                <div class="section-header">
+                    <h2>Welcome to Network Automation Tool</h2>
+                    <p>Select a configuration option from the navigation menu to get started</p>
+                </div>
+                
+                <div class="feature-grid">
+                    <div class="feature-card" onclick="navigateToSection('interface-config')">
+                        <div class="feature-icon">🔌</div>
+                        <h3>Interface Configuration</h3>
+                        <p>Configure IP addresses on physical interfaces</p>
+                    </div>
+                    <div class="feature-card" onclick="navigateToSection('subinterface-config')">
+                        <div class="feature-icon">🌐</div>
+                        <h3>Sub-interface Configuration</h3>
+                        <p>Create and configure VLAN sub-interfaces</p>
+                    </div>
+                    <div class="feature-card" onclick="navigateToSection('show-ip-brief')">
+                        <div class="feature-icon">📊</div>
+                        <h3>Show IP Brief</h3>
+                        <p>View interface status and IP addresses</p>
+                    </div>
+                    <div class="feature-card" onclick="navigateToSection('routing-config')">
+                        <div class="feature-icon">🛤️</div>
+                        <h3>Routing Configuration</h3>
+                        <p>Configure static and dynamic routing</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interface Configuration Section -->
+            <section id="interface-config" class="content-section">
+                <div class="section-header">
+                    <h2>Interface IP Configuration</h2>
+                    <p>Configure IP addresses on physical interfaces</p>
+                </div>
+                
+                <div class="config-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Interface Name <span class="required">*</span></label>
+                            <input type="text" id="int-name" placeholder="GigabitEthernet0/1" required>
+                            <span class="help-text">e.g., GigabitEthernet0/1, FastEthernet0/0</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" id="int-description" placeholder="Connection to LAN">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>IP Address <span class="required">*</span></label>
+                            <input type="text" id="int-ip" placeholder="192.168.1.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Subnet Mask <span class="required">*</span></label>
+                            <input type="text" id="int-mask" placeholder="255.255.255.0" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="int-no-shutdown" checked>
+                            Enable interface (no shutdown)
+                        </label>
+                    </div>
+                    
+                    <div class="command-preview">
+                        <h4>Command Preview:</h4>
+                        <pre id="int-preview">Commands will appear here...</pre>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="executeInterfaceConfig()">
+                        Execute Configuration
+                    </button>
+                </div>
+            </section>
+
+            <!-- Sub-interface Configuration Section -->
+            <section id="subinterface-config" class="content-section">
+                <div class="section-header">
+                    <h2>Sub-interface Configuration</h2>
+                    <p>Configure VLAN sub-interfaces with 802.1Q encapsulation</p>
+                </div>
+                
+                <div class="config-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Parent Interface <span class="required">*</span></label>
+                            <input type="text" id="sub-parent" placeholder="GigabitEthernet0/1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>VLAN ID <span class="required">*</span></label>
+                            <input type="number" id="sub-vlan" placeholder="10" min="1" max="4094" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>IP Address <span class="required">*</span></label>
+                            <input type="text" id="sub-ip" placeholder="192.168.10.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Subnet Mask <span class="required">*</span></label>
+                            <input type="text" id="sub-mask" placeholder="255.255.255.0" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="sub-description" placeholder="VLAN 10 - Sales Department">
+                    </div>
+                    
+                    <div class="command-preview">
+                        <h4>Command Preview:</h4>
+                        <pre id="sub-preview">Commands will appear here...</pre>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="executeSubinterfaceConfig()">
+                        Execute Configuration
+                    </button>
+                </div>
+            </section>
+
+            <!-- Show IP Brief Section -->
+            <section id="show-ip-brief" class="content-section">
+                <div class="section-header">
+                    <h2>Show IP Interface Brief</h2>
+                    <p>View current interface status and IP addresses</p>
+                </div>
+                
+                <div class="show-command-section">
+                    <button class="btn btn-primary" onclick="executeShowCommand('show ip interface brief')">
+                        🔍 Show IP Interface Brief
+                    </button>
+                    
+                    <div class="additional-options">
+                        <button class="btn btn-secondary" onclick="executeShowCommand('show ip interface brief | include up')">
+                            ✅ Show Only UP Interfaces
+                        </button>
+                        <button class="btn btn-secondary" onclick="executeShowCommand('show ip interface brief | include down')">
+                            ❌ Show Only DOWN Interfaces
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Routing Configuration Section -->
+            <section id="routing-config" class="content-section">
+                <div class="section-header">
+                    <h2>Routing Configuration</h2>
+                    <p>Configure static routes and routing protocols</p>
+                </div>
+                
+                <div class="routing-tabs">
+                    <button class="tab-btn active" onclick="showRoutingTab('static')">Static Routes</button>
+                    <button class="tab-btn" onclick="showRoutingTab('ospf')">OSPF</button>
+                    <button class="tab-btn" onclick="showRoutingTab('eigrp')">EIGRP</button>
+                </div>
+                
+                <div id="static-routing" class="routing-content active">
+                    <h3>Static Route Configuration</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Destination Network <span class="required">*</span></label>
+                            <input type="text" id="static-network" placeholder="192.168.2.0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Subnet Mask <span class="required">*</span></label>
+                            <input type="text" id="static-mask" placeholder="255.255.255.0" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Next Hop IP <span class="required">*</span></label>
+                            <input type="text" id="static-nexthop" placeholder="192.168.1.254" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Administrative Distance</label>
+                            <input type="number" id="static-distance" placeholder="1" min="1" max="255">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="executeStaticRoute()">
+                        Add Static Route
+                    </button>
+                </div>
+                
+                <div id="ospf-routing" class="routing-content">
+                    <h3>OSPF Configuration</h3>
+                    <!-- OSPF configuration form -->
+                </div>
+                
+                <div id="eigrp-routing" class="routing-content">
+                    <h3>EIGRP Configuration</h3>
+                    <!-- EIGRP configuration form -->
+                </div>
+            </section>
+
+            <!-- Other sections... -->
+            
+            <!-- Output Section (appears in all sections) -->
+            <div class="output-container" id="outputContainer" style="display: none;">
+                <div class="output-tabs">
+                    <button class="output-tab active" onclick="showOutputTab('raw')">Raw Output</button>
+                    <button class="output-tab" onclick="showOutputTab('interpreted')">AI Interpretation</button>
+                </div>
+                
+                <div id="raw-output" class="output-section active">
+                    <div class="output-header">
+                        <h3>Command Output</h3>
+                        <button class="btn btn-sm" onclick="clearOutput()">Clear</button>
+                    </div>
+                    <pre id="output" class="output-content"></pre>
+                </div>
+                
+                <div id="interpreted-output" class="output-section">
+                    <div class="output-header">
+                        <h3>AI Network Analysis</h3>
+                        <button class="btn btn-sm" onclick="requestInterpretation()">Regenerate</button>
+                    </div>
+                    <div id="interpretation" class="interpretation-content">
+                        <div class="interpretation-placeholder">
+                            <p>🤖 AI interpretation will appear here for show commands...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loader" class="loader-overlay" style="display: none;">
+        <div class="loader-content">
+            <div class="loader"></div>
+            <p class="loader-text">Processing...</p>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

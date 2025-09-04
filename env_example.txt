@@ -1,0 +1,17 @@
+# Environment Variables Setup
+# Create a .env file in the project root and add these variables:
+
+# OpenAI API Key for AI interpretation features
+OPENAI_API_KEY=your-openai-api-key-here
+
+# Telegram Bot Token
+TELEGRAM_BOT_TOKEN=your-telegram-bot-token-here
+
+# How to use:
+# 1. Copy these variables to a new file named .env
+# 2. Replace the placeholder values with your actual keys
+# 3. Never commit the .env file to version control
+
+# Alternative: Export as environment variables
+# export OPENAI_API_KEY="your-openai-api-key-here"
+# export TELEGRAM_BOT_TOKEN="your-telegram-bot-token-here"
