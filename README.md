@@ -1,182 +1,84 @@
-# Network Automation Tool
+# Network Automation Telegram Bot
 
-A comprehensive network automation solution for Cisco devices featuring a web interface, REST API, Telegram bot integration, and AI-powered command interpretation.
+A Telegram bot for automating Cisco network device configurations, supporting both routers and switches.
 
-## 🚀 Features
+## Features
 
-### Web Interface
-- **Professional Navigation**: Multi-page interface with dedicated sections for different network operations
-- **Device Management**: Connect to Cisco devices via SSH with secure credential handling
-- **Configuration Tools**:
-  - Interface IP Configuration
-  - Sub-interface (VLAN) Configuration
-  - Routing Configuration (Static, OSPF, EIGRP)
-  - Access Control Lists
-  - DHCP Configuration
-- **Show Commands**: Execute and view various show commands with syntax highlighting
-- **AI Integration**: OpenAI-powered interpretation of show command outputs for better insights
+- **Multi-Device Support**: Connect to both routers and switches simultaneously
+- **Device Switching**: Easily switch between connected devices
+- **Interface Configuration**: Configure IP addresses on interfaces
+- **VLAN Management** (Switch only): Create VLANs and assign ports
+- **DHCP Configuration** (Router only): Set up DHCP pools with network settings
+- **Interactive UI**: Button-based navigation for easy use
+- **Secure**: Passwords are deleted immediately after use
 
-### Telegram Bot
-- **Interactive Configuration**: Button-based navigation for easy network configuration
-- **Secure Communication**: Passwords are automatically deleted from chat history
-- **Real-time Feedback**: See command execution results instantly
-- **Mobile Access**: Configure networks from anywhere using Telegram
+## Installation
 
-### API Features
-- **RESTful Endpoints**: Full API for programmatic access
-- **Command Templates**: Pre-built templates for common configurations
-- **Error Handling**: Comprehensive error messages and status codes
-- **Session Management**: Handle multiple device connections
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## 🛠️ Technology Stack
+2. Set your Telegram bot token as an environment variable:
+   ```bash
+   export TELEGRAM_BOT_TOKEN='your-bot-token-here'
+   ```
 
-- **Backend**: FastAPI (Python)
-- **Frontend**: HTML, CSS, JavaScript (Vanilla)
-- **Network Library**: Netmiko
-- **AI Integration**: OpenAI GPT-3.5
-- **Telegram Bot**: python-telegram-bot
-- **Database**: In-memory session storage (upgradeable to persistent DB)
+## Usage
 
-## 📋 Prerequisites
+1. Start the bot:
+   ```bash
+   python telegram_bot.py
+   ```
 
-- Python 3.8 or higher
-- Network access to Cisco devices
-- Valid device credentials
-- OpenAI API key (for AI features)
-- Telegram Bot Token (for Telegram integration)
+2. In Telegram, start a conversation with your bot using `/start`
 
-## 🔧 Installation
+3. Connect to devices:
+   - Select "Connect to Device"
+   - Choose device type (Router or Switch)
+   - Enter device IP (Switch default: 192.168.122.6)
+   - Enter credentials (same for both devices)
 
-1. **Clone the repository**
-```bash
-git clone https://github.com/Alpha-Mintamir/Network-Automation.git
-cd Network-Automation
-```
+4. Switch between devices:
+   - Use "Change Device" to switch between connected router and switch
 
-2. **Create virtual environment**
-```bash
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+5. Configure devices:
+   - **Router**: Interface configuration, DHCP setup
+   - **Switch**: Interface configuration, VLAN management
 
-3. **Install dependencies**
-```bash
-pip install -r requirements.txt
-```
+## Commands
 
-4. **Configuration** (Optional)
-- For AI features: Set your OpenAI API key in the code or use environment variables
-- For Telegram bot: Update the bot token in `telegram_bot.py`
+- `/start` - Start the bot and show main menu
+- `/help` - Display help information
+- `/cancel` - Cancel current operation
 
-## 🚀 Usage
+## Device-Specific Features
 
-### Web Interface
+### Router Features
+- Configure interface IP addresses
+- Set up DHCP pools with:
+  - Network and subnet mask
+  - Default gateway
+  - DNS servers
 
-1. **Start the web application**
-```bash
-python main.py
-```
+### Switch Features
+- Configure interface IP addresses  
+- Create and manage VLANs:
+  - Create VLAN with ID and name
+  - Assign ports to VLANs
+  - Support for port ranges (e.g., Fa0/1-5)
 
-2. **Access the interface**
-- Open your browser and navigate to `http://localhost:8000`
-- Connect to a device using the sidebar
-- Use the navigation menu to access different features
+## Security Notes
 
-### Telegram Bot
+- Passwords are automatically deleted from chat
+- Sessions are temporary and stored in memory
+- Use only in secure, trusted environments
+- No credentials are persisted
 
-1. **Start the Telegram bot**
-```bash
-python telegram_bot.py
-```
+## Example Workflow
 
-2. **Use the bot**
-- Open Telegram and search for your bot
-- Send `/start` to begin
-- Follow the interactive prompts
-
-### API Usage
-
-The API is available at `http://localhost:8000` when the main application is running.
-
-**Example API calls:**
-
-```bash
-# Test connection
-curl -X POST http://localhost:8000/api/test-connection \
-  -H "Content-Type: application/json" \
-  -d '{
-    "device_type": "cisco_ios",
-    "host": "192.168.1.1",
-    "username": "admin",
-    "password": "password"
-  }'
-
-# Execute commands
-curl -X POST http://localhost:8000/api/execute \
-  -H "Content-Type: application/json" \
-  -d '{
-    "device": {
-      "device_type": "cisco_ios",
-      "host": "192.168.1.1",
-      "username": "admin",
-      "password": "password"
-    },
-    "commands": [
-      "show ip interface brief",
-      "show version"
-    ]
-  }'
-```
-
-## 📁 Project Structure
-
-```
-Network-Automation/
-├── main.py                 # FastAPI web application
-├── telegram_bot.py         # Telegram bot implementation
-├── requirements.txt        # Python dependencies
-├── README.md              # This file
-├── config_example.py      # Configuration example
-├── static/                # Frontend assets
-│   ├── style.css         # CSS styling
-│   └── script.js         # JavaScript functionality
-└── templates/            # HTML templates
-    └── index.html        # Main web interface
-```
-
-## 🔒 Security Considerations
-
-- **Credentials**: Never hardcode credentials in production
-- **API Keys**: Use environment variables for sensitive keys
-- **HTTPS**: Use HTTPS in production environments
-- **Authentication**: Implement proper user authentication for production use
-- **Network Security**: Ensure secure network connectivity to devices
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- Netmiko library for excellent network device connectivity
-- FastAPI for the modern web framework
-- OpenAI for AI-powered interpretations
-- The open-source community for various tools and libraries
-
-## 📞 Support
-
-For issues, questions, or contributions, please open an issue in the GitHub repository.
-
----
-
-**Note**: This tool is intended for authorized network administration only. Always ensure you have proper authorization before accessing network devices.
+1. Connect to router (e.g., 192.168.1.1)
+2. Connect to switch (192.168.122.6)
+3. Switch to router and configure DHCP
+4. Switch to switch and create VLANs
+5. Configure interfaces on either device as needed

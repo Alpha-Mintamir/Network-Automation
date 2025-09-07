@@ -15,3 +15,4 @@ TELEGRAM_BOT_TOKEN=your-telegram-bot-token-here
 # Alternative: Export as environment variables
 # export OPENAI_API_KEY="your-openai-api-key-here"
 # export TELEGRAM_BOT_TOKEN="your-telegram-bot-token-here"
+
