@@ -36,7 +36,7 @@ A Telegram bot for automating Cisco network device configurations, supporting bo
 3. Connect to devices:
    - Select "Connect to Device"
    - Choose device type (Router or Switch)
-   - Enter device IP (Switch default: 192.168.122.6)
+   - Enter device IP address
    - Enter credentials (same for both devices)
 
 4. Switch between devices:
@@ -78,7 +78,7 @@ A Telegram bot for automating Cisco network device configurations, supporting bo
 ## Example Workflow
 
 1. Connect to router (e.g., 192.168.1.1)
-2. Connect to switch (192.168.122.6)
+2. Connect to switch (e.g., 192.168.1.2)
 3. Switch to router and configure DHCP
 4. Switch to switch and create VLANs
 5. Configure interfaces on either device as needed

@@ -225,14 +225,9 @@ class NetworkBot:
         # Store the device type being configured
         context.user_data['configuring_device'] = device_type
         
-        # Set default IP for switch
-        default_ip = ""
-        if device_type == 'switch':
-            default_ip = " (Default: 192.168.122.6)"
-        
         await query.edit_message_text(
             f"Connecting to *{device_type.title()}*\n\n"
-            f"Please enter the *device IP address*{default_ip}:",
+            f"Please enter the *device IP address*:",
             parse_mode='Markdown'
         )
         
@@ -243,10 +238,6 @@ class NetworkBot:
         user_id = update.effective_user.id
         ip = update.message.text.strip()
         device_type = context.user_data.get('configuring_device', 'router')
-        
-        # Use default IP for switch if empty
-        if not ip and device_type == 'switch':
-            ip = "192.168.122.6"
         
         # Basic IP validation
         if not self._validate_ip(ip):
@@ -317,10 +308,15 @@ class NetworkBot:
             await update.message.delete()
         
         # Try to connect
-        await update.message.reply_text(f"🔄 Connecting to {device_type}...")
-        
         device_info = user_sessions[user_id]['devices'][device_type]['device']
         device_info['port'] = 22
+        device_info['timeout'] = 30  # Increase timeout to 30 seconds
+        device_info['conn_timeout'] = 30  # Connection timeout
+        
+        await update.message.reply_text(
+            f"🔄 Connecting to {device_type} at {device_info['host']}...\n"
+            f"This may take up to 30 seconds..."
+        )
         
         try:
             connection = ConnectHandler(**device_info)
@@ -346,15 +342,31 @@ class NetworkBot:
             
         except NetMikoTimeoutException:
             await update.message.reply_text(
-                "❌ Connection timeout. Please check the device IP and try again."
+                f"❌ *Connection timeout*\n\n"
+                f"Failed to connect to {device_info['host']}:22\n\n"
+                f"*Possible causes:*\n"
+                f"• Device is not reachable (check with ping)\n"
+                f"• SSH is not enabled on the device\n"
+                f"• Firewall is blocking port 22\n"
+                f"• Wrong IP address\n\n"
+                f"Try: `ping {device_info['host']}` to test connectivity",
+                parse_mode='Markdown'
             )
         except NetMikoAuthenticationException:
             await update.message.reply_text(
-                "❌ Authentication failed. Please check credentials and try again."
+                "❌ *Authentication failed*\n\n"
+                "Please check:\n"
+                "• Username and password are correct\n"
+                "• SSH access is enabled for this user\n"
+                "• Enable password (if required)",
+                parse_mode='Markdown'
             )
         except Exception as e:
             await update.message.reply_text(
-                f"❌ Connection error: {str(e)}"
+                f"❌ *Connection error*\n\n"
+                f"Error details: {str(e)}\n\n"
+                f"Device: {device_info['host']}:22",
+                parse_mode='Markdown'
             )
         
         # Clear the device type from context
@@ -1070,8 +1082,7 @@ class NetworkBot:
             "*Security Notes:*\n"
             "• Passwords are deleted after receipt\n"
             "• Sessions are temporary\n"
-            "• Use in secure environments only\n\n"
-            "*Default Switch IP:* 192.168.122.6"
+            "• Use in secure environments only"
         )
         
         await update.message.reply_text(help_text, parse_mode='Markdown')
